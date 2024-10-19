@@ -13,8 +13,8 @@ inputElement.addEventListener("keydown", async (event) => {
     /* Add the user's input to the messages element */
     messagesElement.innerHTML += `<p><strong>You:</strong> ${user_input}</p>`;
 
-    /* Send a request to the API endpoint with the user's input */
-    const response = await fetch("https://9stspru7lc.execute-api.us-east-1.amazonaws.com/production/My-chatbot-resource", {
+    /* Send a request to the API endpoint with the user's input edit your rest api url which integrates lambda function */
+    const response = await fetch("https://your aws rest api url", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_input }),
