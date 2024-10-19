@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS EC2 Chatbot</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="chat" class="container">
+        <h1>Hello! I'am a Bot, your AWS account manager<img src="spr-bot.jpg" /></h1><br><br>
+        <div id="messages"></div>
+        <label for="input">Manage your AWS services</label><br>
+        <textarea id="input" rows="5" cols="50" placeholder="Type your messages..."></textarea>
+        <button id="toggle-record-btn">Voice Your Command</button>
+    </div>
+    <br>
+    <script src="script.js"></script>
+    <script>
+      window.onload = function() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (typeof SpeechRecognition === "undefined") {
+          alert("This browser does not support Web Speech API. Please use Google Chrome.");
+          return;
+        }
+
+        const recognition = new SpeechRecognition();
+        const inputArea = document.getElementById("input");
+        const toggleBtn = document.getElementById("toggle-record-btn");
+        let isRecording = false;
+
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = "en-US";
+
+        recognition.onresult = function(event) {
+          let transcript = "";
+          for (const result of event.results) {
+            transcript += result[0].transcript;
+          }
+          inputArea.value = transcript;
+        };
+
+        recognition.onerror = function(event) {
+          console.error("Speech Recognition Error: ", event.error);
+        };
+
+        recognition.onend = function() {
+          if (isRecording) {
+            recognition.start();
+          } else {
+            toggleBtn.textContent = "Voice Your Command";
+          }
+        };
+
+        toggleBtn.onclick = function() {
+          if (!isRecording) {
+            recognition.start();
+            isRecording = true;
+            toggleBtn.textContent = "Stop Recording";
+          } else {
+            recognition.stop();
+            isRecording = false;
+            toggleBtn.textContent = "Voice Your Command";
+          }
+        };
+      };
+    </script>
+</body>
+</html>
